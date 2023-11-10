@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:uttarons/Notice/AllNotice.dart';
 
 class StudentHomePage extends StatefulWidget {
 
@@ -17,12 +20,263 @@ class StudentHomePage extends StatefulWidget {
 class _StudentHomePageState extends State<StudentHomePage> {
 
 
+
+
   // hive database
 
-  final _mybox = Hive.box("uttaronBox");
+final _mybox = Hive.box("uttaronBox");
+
+
+bool shouldScaleDown = true;
+
+
+final width = 200.0;
+final height = 300.0;
+
+double firstValue = 0.25;
+double secondValue = 0.25;
+
+
+  List<DateTime> PresenceDate =[];
+
+  List<DateTime> AbsenceDate = [];
+
+  // Firebase All Customer Data Load
+
+List  AllPresenceData = [];
+
+int totalPresence =0;
+
+var Dataload = "";
+
+bool loading = false;
+
+
+  CollectionReference _collectionRef =
+    FirebaseFirestore.instance.collection('Attendance');
+
+
+Future<void> getSpecificPresenceData(String StudentEmail, String SelectedMonth) async {
+    // Get docs from collection reference
+    // QuerySnapshot querySnapshot = await _collectionRef.get();
+          setState(() {
+                loading= true;
+              });
+
+    Query query = _collectionRef.where("StudentEmail", isEqualTo: StudentEmail).where("type", isEqualTo: "presence").where("month", isEqualTo: SelectedMonth);
+    QuerySnapshot querySnapshot = await query.get();
+
+    // Get data from docs and convert map to List
+     AllPresenceData = querySnapshot.docs.map((doc) => doc.data()).toList();
+     
+      setState(() {
+       totalPresence = AllPresenceData.length;
+     });
 
 
 
+     if (AllPresenceData.isEmpty) {
+
+    setState(() {
+      
+      Dataload ="0";
+
+      loading = false;
+     });
+
+
+
+       
+     } else {
+
+
+      for (var i = 0; i < AllPresenceData.length; i++) {
+
+
+        var AttendanceDate = AllPresenceData[i]["Date"];
+
+       var AttendanceSplit = AttendanceDate.toString().split("/");
+
+
+       setState(() {
+
+        PresenceDate.insert(PresenceDate.length, DateTime(int.parse(AttendanceSplit[2]), int.parse(AttendanceSplit[1]), int.parse(AttendanceSplit[0])));
+         
+       });
+
+
+        
+      }
+
+
+
+    setState(() {
+       AllPresenceData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+      loading = false;
+     });
+
+    
+     }
+
+
+    print(AllPresenceData);
+}
+
+
+
+
+
+
+
+
+
+List AllAbsenceData =[];
+
+int totalAbsence = 0;
+
+
+
+Future<void> getSpecificAbsenceData(String StudentEmail, String SelectedMonth) async {
+    // Get docs from collection reference
+    // QuerySnapshot querySnapshot = await _collectionRef.get();
+
+    setState(() {
+      loading= true;
+    });
+
+
+    Query query = _collectionRef.where("StudentEmail", isEqualTo: StudentEmail).where("type", isEqualTo: "absence").where("month", isEqualTo: SelectedMonth);
+    QuerySnapshot querySnapshot = await query.get();
+
+    // Get data from docs and convert map to List
+     AllAbsenceData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+      setState(() {
+            totalAbsence = AllAbsenceData.length;
+          });
+
+     if (AllAbsenceData.isEmpty) {
+
+    setState(() {
+      
+      Dataload ="0";
+
+      loading = false;
+     });
+
+
+
+       
+     } else {
+
+
+      for (var i = 0; i < AllAbsenceData.length; i++) {
+
+
+        var AttendanceDate = AllAbsenceData[i]["Date"];
+
+       var AttendanceSplit = AttendanceDate.toString().split("/");
+
+
+       setState(() {
+
+        AbsenceDate.insert(AbsenceDate.length, DateTime(int.parse(AttendanceSplit[2]), int.parse(AttendanceSplit[1]), int.parse(AttendanceSplit[0])));
+         
+       });
+
+
+        
+      }
+
+
+
+    setState(() {
+       AllAbsenceData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+      loading = false;
+     });
+
+
+
+
+       
+     }
+
+
+
+
+
+
+
+
+    print(AllAbsenceData);
+}
+
+
+
+
+
+
+
+
+
+List NewNotice =[];
+
+
+
+Future<void> getNewNotice() async {
+    // Get docs from collection reference
+    // QuerySnapshot querySnapshot = await _collectionRef.get();
+          setState(() {
+                loading= true;
+              });
+
+      
+      
+  CollectionReference _collectionRef =
+    FirebaseFirestore.instance.collection('Notice');
+
+    Query query = _collectionRef.where("Date", isEqualTo: "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}");
+    QuerySnapshot querySnapshot = await query.get();
+
+    // Get data from docs and convert map to List
+     NewNotice = querySnapshot.docs.map((doc) => doc.data()).toList();
+     
+     
+
+
+
+     if (NewNotice.isEmpty) {
+
+    setState(() {
+      
+      Dataload ="0";
+
+      loading = false;
+     });
+
+
+
+       
+     } else {
+
+
+    
+
+
+
+    setState(() {
+       NewNotice = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+      loading = false;
+     });
+
+    
+     }
+
+
+}
 
 
 
@@ -51,32 +305,107 @@ class _StudentHomePageState extends State<StudentHomePage> {
   
 var photoUrl ="";
 var StudentName ="";
-var StudentEmail = "";
+var StudentEmail = "programmingcrack@gmail.com";
+var StudentType = "Due";
+var DueAmount = "7300";
+var CourseFee ="50000";
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 @override
   void initState() {
-    // TODO: implement initState
-    // getPaidStudentData();
-    // getAllStudent();
-    // getAllDueStudent();
+
+
+
+
+
+
+
+ 
     super.initState();
 
 
 
-      setState(() {
-        photoUrl = _mybox.get("StudentPhotoUrl");
-        StudentName = _mybox.get("StudentName");
-        StudentEmail = _mybox.get("StudentEmail");
-      });
+      // setState(() {
+      //   photoUrl = _mybox.get("StudentPhotoUrl");
+      //   StudentName = _mybox.get("StudentName");
+      //   StudentEmail = _mybox.get("StudentEmail");
+      // });
+
+
+
+        getSpecificPresenceData(StudentEmail, "${DateTime.now().month}/${DateTime.now().year}");
+        
+
+         getSpecificAbsenceData(StudentEmail, "${DateTime.now().month}/${DateTime.now().year}");
+
+         getNewNotice();
+
+
+
+
+
+          Future.delayed(const Duration(milliseconds: 500), () {
+
+
+
+              setState(() {
+
+                firstValue = 0.45;
+                secondValue = 0.45;
+               
+              });
+
+            });
+
+
+
+            Future.delayed(const Duration(milliseconds: 1000), () {
+
+
+
+              setState(() {
+
+                firstValue = 0.75;
+                secondValue = 0.75;
+               
+              });
+
+            });
+
+
+
+
+            Future.delayed(const Duration(milliseconds: 1500), () {
+
+
+
+              setState(() {
+
+                firstValue = 0.95;
+                secondValue = 0.95;
+               
+              });
+
+            });
+
 
 
   
     
-
-  // FlutterNativeSplash.remove();
   
   
   }
@@ -119,6 +448,18 @@ var StudentEmail = "";
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,7 +469,7 @@ var StudentEmail = "";
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 5, right: 5, bottom: 9),
         child: Container(
-          height: 60,
+          height: 70,
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
             borderRadius: const BorderRadius.only(
@@ -228,7 +569,7 @@ var StudentEmail = "";
       backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Color.fromRGBO(92, 107, 192, 1)),
-        leading: IconButton(onPressed: () => Navigator.of(context).pop(), icon: Icon(Icons.chevron_left)),
+        automaticallyImplyLeading: false,
         title: const Text("",  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),),
         backgroundColor: Colors.transparent,
         bottomOpacity: 0.0,
@@ -250,32 +591,338 @@ var StudentEmail = "";
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                
-                
-                     Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                  height: 200,
-                  child: Center(
-                    child: Text("Total Student:", style: TextStyle(
+
+
+
+                    // New Notice 
+                   AnimatedContainer(
                     
-                            fontSize: 20,
-                            color: Colors.white,
-                            overflow: TextOverflow.clip
-                          ),),
-                
-                
-                  ),
-                       
+                      transform: (shouldScaleDown
+                      ? (Matrix4.identity()
+                        ..translate(0.035 * width, 0.025 * height)// translate towards right and down
+                        ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
+                      : Matrix4.identity()),
+                     duration: Duration(seconds: 3),
+                     curve: Curves.fastOutSlowIn,
+                     height: 90,
+                     
+                     child: Center(
+                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                   children: [
+
+                  NewNotice.isEmpty? Text("No New Notice Available Today", style: TextStyle(color: Colors.red.shade300, fontWeight: FontWeight.bold),):Text("1 New Notice Available", style: TextStyle(color: Colors.green.shade300, fontWeight: FontWeight.bold),),
+
+
+                   Container(width: 70, child:TextButton(onPressed: (){
+      
+      
+                                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => AllNotice(indexNumber: "2")));
+      
+      
+                           
+      
+      
+      
+      
+      
+                          }, child: Text("View", style: TextStyle(color: Colors.white),), style: ButtonStyle(
+                           
+                  backgroundColor: MaterialStatePropertyAll<Color>(NewNotice.isEmpty?Colors.red.shade300:Colors.green.shade300),
+                ),),),
+                  
+                   ],
+                 ),
+               ),
+                          
                  decoration: BoxDecoration(
-                  color: Color(0xF0B75CFF),
+                     color: Colors.white,
                 
-                  border: Border.all(
-                            width: 2,
-                            color: Color(0xF0B75CFF)
-                          ),
-                  borderRadius: BorderRadius.circular(10)      
-                 ),)),]))))
+                     border: Border.all(
+                               width: 2,
+                               color: NewNotice.isEmpty?Colors.red.shade300:Colors.green.shade300
+                             ),
+                     borderRadius: BorderRadius.circular(10)      
+                 ),),
+
+
+
+
+
+                 
+                 SizedBox(height: 10,),
+
+
+
+
+
+                 
+                
+                     AnimatedContainer(
+                    
+                      transform: (shouldScaleDown
+                      ? (Matrix4.identity()
+                        ..translate(0.035 * width, 0.025 * height)// translate towards right and down
+                        ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
+                      : Matrix4.identity()),
+                     duration: Duration(seconds: 3),
+                     curve: Curves.fastOutSlowIn,
+                     height: height,
+                     
+                     child: Center(
+                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                   children: [
+                      Text("You have given ${(100-((double.parse(DueAmount))/(double.parse(CourseFee))*100)).toStringAsFixed(2)}% Course Fee",style: TextStyle(color: (100-((double.parse(DueAmount))/(double.parse(CourseFee))*100))>=80.0?Colors.green.shade300:Colors.red.shade300, fontWeight: FontWeight.bold)),
+
+                      SizedBox(height: 10,),
+
+
+
+                     CircularPercentIndicator(
+                       animation: true,
+                       animationDuration: 2500,
+                      
+                       radius: 75.0,
+                       lineWidth: 15.0,
+                       percent: (1-(double.parse(DueAmount))/(double.parse(CourseFee))),
+                       center: Text(
+                         "${(100-((double.parse(DueAmount))/(double.parse(CourseFee))*100)).toStringAsFixed(2)}%",
+                         style: new TextStyle(fontSize: 16.0, color: Colors.black, fontWeight: FontWeight.bold),
+                       ),
+                       
+                       
+                       
+                       progressColor: (100-((double.parse(DueAmount))/(double.parse(CourseFee))*100))>=80.0?Colors.green.shade300:Colors.red.shade300,
+                     ),
+
+                     SizedBox(height: 20,),
+
+
+                    StudentType=="Due"? Text("Due: ${DueAmount}৳",style: TextStyle(color: Colors.red.shade300, fontWeight: FontWeight.bold)):Text(""),
+
+                      
+
+
+
+
+                   ],
+                 ),
+               ),
+                          
+                 decoration: BoxDecoration(
+                     color: Colors.white,
+                
+                     border: Border.all(
+                               width: 1,
+                               color: Colors.grey.shade300
+                             ),
+                     borderRadius: BorderRadius.circular(10)      
+                 ),),
+
+
+
+
+
+                 SizedBox(height: 10,),
+
+
+
+
+
+                 
+                      AnimatedContainer(
+                    
+                      transform: (shouldScaleDown
+                      ? (Matrix4.identity()
+                        ..translate(0.035 * width, 0.025 * height)// translate towards right and down
+                        ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
+                      : Matrix4.identity()),
+                     duration: Duration(seconds: 3),
+                     curve: Curves.fastOutSlowIn,
+                     height: 90,
+                     
+                     child: Center(
+                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                   children: [
+                      Text("Your Profile"),
+
+
+                   Container(width: 100, child:TextButton(onPressed: (){
+      
+      
+                                  //  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ExamFeeHistory(StudentEmail: widget.StudentEmail)));
+      
+      
+                           
+      
+      
+      
+      
+      
+                          }, child: Text("Profile", style: TextStyle(color: Colors.white),), style: ButtonStyle(
+                           
+                  backgroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).primaryColor),
+                ),),),
+                  
+                   ],
+                 ),
+               ),
+                          
+                 decoration: BoxDecoration(
+                     color: Colors.white,
+                
+                     border: Border.all(
+                               width: 2,
+                               color: Colors.grey.shade300
+                             ),
+                     borderRadius: BorderRadius.circular(10)      
+                 ),),
+
+
+
+
+
+                 
+                 SizedBox(height: 10,),
+
+
+
+
+
+
+
+
+
+
+                
+                
+                     AnimatedContainer(
+                    
+                      transform: (shouldScaleDown
+                      ? (Matrix4.identity()
+                        ..translate(0.035 * width, 0.025 * height)// translate towards right and down
+                        ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
+                      : Matrix4.identity()),
+                     duration: Duration(seconds: 3),
+                     curve: Curves.fastOutSlowIn,
+                     height: height,
+                     
+                     child: Center(
+                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                   children: [
+                      Text("Your Presence ${DateTime.now().month}/${DateTime.now().year}"),
+                     CircularPercentIndicator(
+                       animation: true,
+                       animationDuration: 2500,
+                      
+                       radius: 75.0,
+                       lineWidth: 15.0,
+                       percent: (totalPresence/(totalAbsence+totalPresence)).isNaN?0.0:totalPresence/(totalAbsence+totalPresence),
+                       center: Text(
+                         "${(totalPresence/(totalAbsence+totalPresence)).isNaN?"0.0":((totalPresence/(totalAbsence+totalPresence))*100).toStringAsFixed(2)}%",
+                         style: new TextStyle(fontSize: 16.0, color: Colors.black, fontWeight: FontWeight.bold),
+                       ),
+                       
+                       
+                       
+                       progressColor: Colors.green.shade400,
+                     ),
+                   ],
+                 ),
+               ),
+                          
+                 decoration: BoxDecoration(
+                     color: Colors.white,
+                
+                     border: Border.all(
+                               width: 1,
+                               color: Colors.grey.shade300
+                             ),
+                     borderRadius: BorderRadius.circular(10)      
+                 ),),
+
+
+
+
+
+                 SizedBox(height: 10,),
+
+                 
+                
+                     AnimatedContainer(
+                    
+                      transform: (shouldScaleDown
+                      ? (Matrix4.identity()
+                        ..translate(0.035 * width, 0.025 * height)// translate towards right and down
+                        ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
+                      : Matrix4.identity()),
+                     duration: Duration(seconds: 3),
+                     curve: Curves.fastOutSlowIn,
+                     height: height,
+                     
+                     child: Center(
+                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                   children: [
+                      Text("Your Absence ${DateTime.now().month}/${DateTime.now().year}"),
+                     CircularPercentIndicator(
+                       animation: true,
+                       animationDuration: 2500,
+                      
+                       radius: 75.0,
+                       lineWidth: 15.0,
+                       percent: (totalPresence/(totalAbsence+totalPresence)).isNaN?0.0:1.0-(totalPresence/(totalAbsence+totalPresence)),
+                       center: Text(
+                         "${(totalPresence/(totalAbsence+totalPresence)).isNaN?"0.0":((1.0-totalPresence/(totalAbsence+totalPresence))*100).toStringAsFixed(2)}%",
+                         style: new TextStyle(fontSize: 16.0, color: Colors.black, fontWeight: FontWeight.bold),
+                       ),
+                       
+                       
+                       
+                       progressColor: Colors.red.shade400,
+                     ),
+                   ],
+                 ),
+               ),
+                          
+                 decoration: BoxDecoration(
+                     color: Colors.white,
+                
+                     border: Border.all(
+                               width: 1,
+                               color: Colors.grey.shade300
+                             ),
+                     borderRadius: BorderRadius.circular(10)      
+                 ),),
+
+
+
+
+
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 ]))))
 
 
 

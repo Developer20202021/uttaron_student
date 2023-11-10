@@ -351,12 +351,18 @@ bool _passVisibility = true;
 
                         _mybox.delete("StudentPhotoUrl");
                         _mybox.delete("StudentName");
-                         _mybox.delete("StudentEmail");
+                        _mybox.delete("StudentEmail");
+                        _mybox.delete("StudentType");
+                        _mybox.delete("DueAmount");
+                        _mybox.delete("CourseFee");
 
 
                       _mybox.put("StudentPhotoUrl",AllData[0]["StudentImageUrl"]);
                       _mybox.put("StudentName", AllData[0]["StudentName"]);
                       _mybox.put("StudentEmail", AllData[0]["StudentEmail"]);
+                      _mybox.put("StudentType", AllData[0]["StudentType"]);
+                      _mybox.put("DueAmount", AllData[0]["DueAmount"]);
+                      _mybox.put("CourseFee", AllData[0]["CourseFee"]);
               
                       
               
