@@ -6,6 +6,7 @@ import 'package:uttarons/DeveloperAccess/DeveloperAccess.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uttarons/HomePage/HomePage.dart';
+import 'package:uttarons/LogIn/AdminLogIn.dart';
 
 void main() async{
 
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: ColorName().appColor),
         useMaterial3: true,
       ),
-      home: StudentHomePage(indexNumber: "1"),
+      home: AdminLogInScreen(),
     );
   }
 }

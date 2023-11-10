@@ -1,4 +1,4 @@
-package com.example.uttarons
+package com.inansoft.uttarons
 
 import io.flutter.embedding.android.FlutterActivity
 

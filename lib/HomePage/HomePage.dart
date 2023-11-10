@@ -1,8 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:uttarons/DeveloperAccess/DeveloperAccess.dart';
+import 'package:uttarons/LogIn/AdminLogIn.dart';
 import 'package:uttarons/Notice/AllNotice.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:uttarons/Settings/ChangePassword.dart';
+import 'package:uttarons/myHistory/CourseFeeHistory.dart';
+import 'package:uttarons/myHistory/ExamFeeHistory.dart';
+import 'package:uttarons/myHistory/ShowAttendance.dart';
+import 'package:uttarons/myHistory/StudentProfile.dart';
 
 class StudentHomePage extends StatefulWidget {
 
@@ -305,10 +315,10 @@ Future<void> getNewNotice() async {
   
 var photoUrl ="";
 var StudentName ="";
-var StudentEmail = "programmingcrack@gmail.com";
-var StudentType = "Due";
-var DueAmount = "7300";
-var CourseFee ="50000";
+var StudentEmail = "";
+var StudentType = "";
+var DueAmount = "";
+var CourseFee ="";
 
 
 
@@ -339,11 +349,14 @@ var CourseFee ="50000";
 
 
 
-      // setState(() {
-      //   photoUrl = _mybox.get("StudentPhotoUrl");
-      //   StudentName = _mybox.get("StudentName");
-      //   StudentEmail = _mybox.get("StudentEmail");
-      // });
+      setState(() {
+        photoUrl = _mybox.get("StudentPhotoUrl");
+        StudentName = _mybox.get("StudentName");
+        StudentEmail = _mybox.get("StudentEmail");
+        StudentType = _mybox.get("StudentType");
+        DueAmount = _mybox.get("DueAmount");
+        CourseFee = _mybox.get("CourseFee");
+      });
 
 
 
@@ -466,115 +479,147 @@ var CourseFee ="50000";
 
 
 
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 5, right: 5, bottom: 9),
-        child: Container(
-          height: 70,
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
       
+
+
+
+        // Drawer section 
+    drawer: Drawer(
+      child: ListView(children: [
+        UserAccountsDrawerHeader(
+              accountName: Text("${StudentName}", style: TextStyle(color:Colors.white),),
+              accountEmail: Text("${StudentEmail}",style: TextStyle(color: Colors.white),),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: NetworkImage(
+                    "${photoUrl}"),
+              ),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(
+                    "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg",
+                  ),
+                  fit: BoxFit.fill,
+                ),
+              ),
+              
             ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
 
 
-           widget.indexNumber == "1"?
-              IconButton(
-                enableFeedback: false,
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.home_sharp,
-                  color: Colors.white,
-                  size: 55,
-                  fill: 1.0,
-                ),
-              ): IconButton(
-                enableFeedback: false,
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.home_sharp,
-                  color: Colors.white,
-                  size: 25,
-                ),
-              ),
+            
+        ListTile(title: Text("Show A/P"),leading: Icon(Icons.fingerprint, color: ColorName().appColor,size: 16,),
+
+          onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => ShowAttendance(StudentEmail: StudentEmail)));
+        },
+        
+        
+        ),
+        Divider(height: 3,thickness: 2,),
+
+       
+        ListTile(title: Text("My profile"),leading: Icon(Icons.person, color: ColorName().appColor,size: 16,),
+        
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => StudentProfile(StudentEmail: StudentEmail)));
+        },
+        
+        ),
+        Divider(height: 3,thickness: 2,),
+        ListTile(title: Text("Exam Fee History"),leading: Icon(Icons.history, color: ColorName().appColor,size: 16,),
+
+             onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => ExamFeeHistory(StudentEmail: StudentEmail)));
+        },
+        
+        
+        ),
+        Divider(height: 3,thickness: 2,),
+        ListTile(title: Text("Course Fee History"),leading: Icon(Icons.history, color: ColorName().appColor,size: 16,),
+                onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => CourseFeeHistory(StudentEmail: StudentEmail)));
+        },
+        
+        
+        ),
+        Divider(height: 3,thickness: 2,),
+        ListTile(title: Text("Notice"),leading: Icon(Icons.notifications, color: ColorName().appColor,size: 16,),
+
+               onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => AllNotice(indexNumber: "1")));
+        },
+        
+        
+        ),
+        Divider(height: 3,thickness: 2,),
 
 
 
+        ListTile(title: Text("Change Password"),leading: Icon(Icons.password, color: ColorName().appColor,size: 16,),
+        
+           onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChangePassword()));
+        },
+        
+        ),
 
-              IconButton(
-                enableFeedback: false,
-                onPressed: () {
+
+           ListTile(title: Text("Log Out"),leading: Icon(Icons.logout, color: ColorName().appColor,size: 16,),
+        
+        onTap: () async{
+
+                          FirebaseAuth.instance
+                            .authStateChanges()
+                            .listen((User? user) async{
+                              if (user == null) {
+                                
+                       Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AdminLogInScreen()),
+                      );
+                                print('User is currently signed out!');
+                              } else {
+                                print('User is signed in!');
+                                await FirebaseAuth.instance.signOut();
+                                          
+                  Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AdminLogInScreen()),
+                      );
+                              }
+                            });
+                  
 
 
-                    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => AllNotice(indexNumber: "2")));
 
 
                 },
-                icon: const Icon(
-                  Icons.notifications,
-                  color: Colors.white,
-                  size: 25,
-                ),
-              ),
+        
+        ),
+
+
+    
+      ]),
+     
+    ), 
 
 
 
 
-              IconButton(
-                enableFeedback: false,
-                onPressed: () {
-
-
-                  //  Navigator.of(context).push(MaterialPageRoute(builder: (context) =>MonthlyCourseFeeCollection()));
-
-
-
-                },
-                icon: const Icon(
-                  Icons.account_balance,
-                  color: Colors.white,
-                  size: 25,
-                ),
-              ),
-
-
-
-              IconButton(
-                enableFeedback: false,
-                onPressed: () {
-
-                  //  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AllDepartment()));
 
 
 
 
-                },
-                icon: const Icon(
-                  Icons.person_outline,
-                  color: Colors.white,
-                  size: 25,
-                ),
-              ),
-            ],
-          ),),
-      ),
+
 
       backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Color.fromRGBO(92, 107, 192, 1)),
-        automaticallyImplyLeading: false,
-        title: const Text("",  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),),
+        title: const Text("Home",  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),),
         backgroundColor: Colors.transparent,
         bottomOpacity: 0.0,
         elevation: 0.0,
         centerTitle: true,
+    
         
       ),
 
@@ -591,6 +636,93 @@ var CourseFee ="50000";
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+
+
+                  
+                  
+                 
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: 50,
+                  
+                  child: DefaultTextStyle(
+                    style:  TextStyle(
+                      fontSize: 15.0,
+                      color: ColorName().appColor,
+                      fontFamily: GoogleFonts.spaceGrotesk().fontFamily,
+                      fontWeight: FontWeight.bold
+                    ),
+                    child: AnimatedTextKit(
+                      
+                      repeatForever: true,
+                      animatedTexts: [
+                        TypewriterAnimatedText('Hi...'),
+                        TypewriterAnimatedText('${StudentName.toUpperCase()}'),
+                        TypewriterAnimatedText('Welcome to Uttaron Polytechnic Institute'),
+                        
+                      ],
+                      onTap: () {
+                        print("Tap Event");
+                      },
+                    ),
+                  ),
+                ),
+              ),
+
+
+
+
+
+
+                  
+                  StudentType=="Due"?AnimatedContainer(
+                    
+                      transform: (shouldScaleDown
+                      ? (Matrix4.identity()
+                        ..translate(0.035 * width, 0.025 * height)// translate towards right and down
+                        ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
+                      : Matrix4.identity()),
+                     duration: Duration(seconds: 3),
+                     curve: Curves.fastOutSlowIn,
+                     height: 40,
+                     
+                     child: Center(
+                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                   children: [
+
+                      Icon(Icons.warning, color: Colors.white,),
+
+
+                      Text("Please, pay your course fee",style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+
+
+                  
+                   ],
+                 ),
+               ),
+                          
+                 decoration: BoxDecoration(
+                     color: Colors.orange.shade300,
+                
+                     border: Border.all(
+                               width: 2,
+                               color: Colors.orange.shade300
+                             ),
+                     borderRadius: BorderRadius.circular(10)      
+                 ),):Text(""),
+
+
+
+
+
+                 
+                 SizedBox(height: 10,),
+
+
+
 
 
 
@@ -755,7 +887,7 @@ var CourseFee ="50000";
                    Container(width: 100, child:TextButton(onPressed: (){
       
       
-                                  //  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ExamFeeHistory(StudentEmail: widget.StudentEmail)));
+                                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => StudentProfile(StudentEmail: StudentEmail)));
       
       
                            

@@ -8,6 +8,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive/hive.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
+import 'package:uttarons/HomePage/HomePage.dart';
 import 'package:uttarons/LogIn/AdminNotApprove.dart';
 import 'package:uttarons/LogIn/EmailNotVerified.dart';
 import 'package:uttarons/Settings/ResetPassword.dart';
@@ -367,7 +368,7 @@ bool _passVisibility = true;
                       
               
               
-                            //  Navigator.push(context, MaterialPageRoute(builder: (context) => AdminDashboard(indexNumber: "1",)),);
+                             Navigator.push(context, MaterialPageRoute(builder: (context) => StudentHomePage(indexNumber: "")),);
               
                              setState(() {
                             loading=false;
