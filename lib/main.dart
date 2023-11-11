@@ -7,6 +7,8 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uttarons/HomePage/HomePage.dart';
 import 'package:uttarons/LogIn/AdminLogIn.dart';
+import 'package:uttarons/chat/fetchDataRealtime.dart';
+import 'package:uttarons/chat/realtimecheck.dart';
 
 void main() async{
 
@@ -17,7 +19,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
 
-    options: FirebaseOptions(apiKey: "AIzaSyCtca9qgQyElzVEMbjUkUrzYsE94fmhhN8", appId: "1:145894825045:android:fcebc7fde39d41eaaa88dc", messagingSenderId: "145894825045", projectId: "uttaronapp")
+    options: FirebaseOptions(apiKey: "AIzaSyCtca9qgQyElzVEMbjUkUrzYsE94fmhhN8", appId: "1:145894825045:android:fcebc7fde39d41eaaa88dc", messagingSenderId: "145894825045", projectId: "uttaronapp",)
     
   );
 

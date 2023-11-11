@@ -2,7 +2,8 @@
   "project_info": {
     "project_number": "145894825045",
     "project_id": "uttaronapp",
-    "storage_bucket": "uttaronapp.appspot.com"
+    "storage_bucket": "uttaronapp.appspot.com",
+    "firebase_url": "https://uttaronapp-default-rtdb.asia-southeast1.firebasedatabase.app/"
   },
   "client": [
     {
