@@ -176,45 +176,51 @@ Future ResendOTPSend() async{
       ),
       body: SingleChildScrollView(child: Column(
         children: [
-          Center(child: Text("আপনার Phone Number টি Verify করেননি। তাই আপনাকে App এর ভিতরে প্রবেশের অনুমতি দেওয়া যাচ্ছে না। দয়া করে Verify Button এ Click করুন এবং আপনার Phone Number টি Verify করুন।")),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(child: Text("আপনার Phone Number টি Verify করেননি। তাই আপনাকে App এর ভিতরে প্রবেশের অনুমতি দেওয়া যাচ্ছে না। দয়া করে Verify Button এ Click করুন এবং আপনার Phone Number টি Verify করুন।")),
+          ),
 
 
-          Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(width: 80, child:TextButton(onPressed: () async{
-        
-        
-                      setState(() {
-                        loading = true;
-                      });
-        
-        
-                      ResendOTPSend();
-        
-                
-        
-        
-                 
-        
-        
-        
-        
-        
-                    }, child: Text("Resend", style: TextStyle(color: Colors.white, fontSize: 12),), style: ButtonStyle(
-                     
-            backgroundColor: MaterialStatePropertyAll<Color>(Colors.pink.shade400),
-          ),),),
-        
-        
-        
-        
-        
-        
-        
-        
-                  ],
-                ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(width: 80, child:TextButton(onPressed: () async{
+                  
+                  
+                        setState(() {
+                          loading = true;
+                        });
+                  
+                  
+                        ResendOTPSend();
+                  
+                  
+                  
+                  
+                   
+                  
+                  
+                  
+                  
+                  
+                      }, child: Text("Resend", style: TextStyle(color: Colors.white, fontSize: 12),), style: ButtonStyle(
+                       
+              backgroundColor: MaterialStatePropertyAll<Color>(Colors.pink.shade400),
+            ),),),
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                    ],
+                  ),
+          ),
 
 
 
