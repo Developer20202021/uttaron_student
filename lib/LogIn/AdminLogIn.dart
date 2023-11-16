@@ -11,6 +11,7 @@ import 'package:lottie/lottie.dart';
 import 'package:uttarons/HomePage/HomePage.dart';
 import 'package:uttarons/LogIn/AdminNotApprove.dart';
 import 'package:uttarons/LogIn/EmailNotVerified.dart';
+import 'package:uttarons/LogIn/PhoneNumberNotVerify.dart';
 import 'package:uttarons/Settings/ResetPassword.dart';
 
 
@@ -40,6 +41,31 @@ bool _passVisibility = true;
 
 
 
+  Future StudentLogOut () async{
+
+    
+                          FirebaseAuth.instance
+                            .authStateChanges()
+                            .listen((User? user) async{
+                              if (user == null) {
+                                
+                   
+                                print('User is currently signed out!');
+                              } else {
+                                print('User is signed in!');
+                                await FirebaseAuth.instance.signOut();
+                                          
+            
+                              }
+                            });
+                  
+
+
+
+  }
+
+
+
 
 
 
@@ -48,6 +74,8 @@ bool _passVisibility = true;
   void initState() {
     // TODO: implement initState
     FlutterNativeSplash.remove();
+
+    StudentLogOut();
     super.initState();
   }
 
@@ -313,10 +341,10 @@ bool _passVisibility = true;
                         var userVerified = credential.user!.emailVerified;
               
               
-                        if (userVerified) {
+                   
               
               
-                          List  AllData = [];
+                    List  AllData = [];
               
               
                       CollectionReference _collectionRef =
@@ -345,9 +373,12 @@ bool _passVisibility = true;
               
               
                  
-              
-              
-              
+
+                 if (AllData[0]["PhoneVerify"]=="true") {
+
+
+
+
                     if (AllData[0]["AdminApprove"] == "true") {
 
                         _mybox.delete("StudentPhotoUrl");
@@ -376,7 +407,8 @@ bool _passVisibility = true;
               
                       
                     }
-              
+
+                    
                     else{
               
                       setState(() {
@@ -388,6 +420,36 @@ bool _passVisibility = true;
               
               
                     }
+
+
+
+
+
+                   
+                 } else {
+
+
+
+
+                          setState(() {
+                            loading=false;
+                          });
+              
+              
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => PhoneNumberNotVerified(StudentEmail: AllData[0]["StudentEmail"], StudentPhoneNumber: AllData[0]["StudentPhoneNumber"])),);
+
+
+
+
+
+
+                   
+                 }
+              
+              
+              
+                  
+              
               
               
               
@@ -416,27 +478,8 @@ bool _passVisibility = true;
                           
               
                           
-                        }
-                        else{
-              
-              
-                            await credential.user?.delete();
-              
-                               CollectionReference _collectionRef =
-                        FirebaseFirestore.instance.collection('Admin');
-                            _collectionRef.doc(userEmail).delete().then(
-                    (doc) => print("Document deleted"),
-                    onError: (e) => print("Error updating document $e"),
-                  );
-              
-                              setState(() {
-                            loading=false;
-                          });
-                          
-                             Navigator.push(context, MaterialPageRoute(builder: (context) => EmailNotVerified()),);
-              
-              
-                        }
+                        
+                
               
               
               
