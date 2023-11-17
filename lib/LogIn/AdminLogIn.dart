@@ -35,6 +35,9 @@ bool _passVisibility = true;
 
    bool loading = false;
 
+   
+  String errorTxt = "";
+
    // hive database
 
   final _mybox = Hive.box("uttaronBox");
@@ -120,88 +123,36 @@ bool _passVisibility = true;
                           children: [
 
 
+                
+
+
+                
+                    
+                   errorTxt.isNotEmpty?  Padding(
+               padding: const EdgeInsets.all(8.0),
+               child: Container(
+             
+                         color: Colors.red.shade400,
+                         
+                         
+                         child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("${errorTxt}", style: TextStyle(color: Colors.white),),
+                         )),
+             ):Text(""),
+
+
+
+
+            
+          SizedBox(height: 15,),
+
+
+
 
                       
               
-              
-              
-              
-              
-                 createUserErrorCode=="wrong-password"? Center(
-                  child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                
-                
-                                  child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Icon(Icons.close, color: Colors.red,),
-                      Text("Wrong password provided for that user."),
-                    ],
-                  ),
-                                  ),
-                   
-                               decoration: BoxDecoration(
-                                color: Colors.red[100],
-                
-                                border: Border.all(
-                        width: 2,
-                        color: Colors.white
-              
-                        
-                      ),
-                                borderRadius: BorderRadius.circular(10)      
-                               ),)),
-                ):Text(""),
-              
-              
-              
-              
-              
-              
-              
-                createUserErrorCode=="user-not-found"? Center(
-                  child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                
-                
-                                  child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Row(
-                    children: [
-                      Icon(Icons.close, color: Colors.red,),
-                      Text("No user found for that email.", overflow: TextOverflow.clip,),
-                    ],
-                  ),
-                                  ),
-                   
-                               decoration: BoxDecoration(
-                                color: Colors.red[100],
-                
-                                border: Border.all(
-                        width: 2,
-                        color: Colors.white
-              
-                        
-                      ),
-                                borderRadius: BorderRadius.circular(10)      
-                               ),)),
-                ):Text(""),
-              
-              
-              
-              
-              
-              
-              
-              
-                
-              
-              
-              
+     
               
                           
                 
@@ -379,7 +330,7 @@ bool _passVisibility = true;
 
 
 
-                    if (AllData[0]["AdminApprove"] == "true") {
+                    if (AllData.isNotEmpty && AllData[0]["AdminApprove"] == "true") {
 
                         _mybox.delete("StudentPhotoUrl");
                         _mybox.delete("StudentName");
@@ -448,73 +399,31 @@ bool _passVisibility = true;
               
               
               
-                  
-              
-              
-              
-              
-                          
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-                         
-              
-              
-              
-              
-              
-              
-              
-              
-              
-                          
-              
-                          
-                        
-                
-              
-              
-              
-              
-                  
-              
-              
-              
-                        
-                    
-              
-              
-              
-              
+ 
               
               
                       } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
-              
-                          setState(() {
-                            loading=false;
-                            createUserErrorCode = "user-not-found";
-                            
-                          });
-                          print('No user found for that email.');
-                        } else if (e.code == 'wrong-password') {
-              
-              
-                          setState(() {
-                            loading=false;
-                            createUserErrorCode = "wrong-password";
-                            
-                          });
-                          print('Wrong password provided for that user.');
-                        }
+
+
+
+
+               
+
+                        setState(() {
+
+                          errorTxt = e.code.toString();
+                          
+                        });
+
+
+                                 
+                  setState(() {
+                    loading = false;
+                  });
+                     
+
+
+
                       }
               
               

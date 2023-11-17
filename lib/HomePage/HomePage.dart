@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:uttarons/DeveloperAccess/DeveloperAccess.dart';
+import 'package:uttarons/DeveloperAccess/DeveloperInfo.dart';
 import 'package:uttarons/LogIn/AdminLogIn.dart';
 import 'package:uttarons/Notice/AllNotice.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -558,6 +559,15 @@ var CourseFee ="";
         
            onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChangePassword()));
+        },
+        
+        ),
+
+
+        ListTile(title: Text("Developer Info"),leading: Icon(Icons.developer_board, color: ColorName().appColor,size: 16,),
+        
+           onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => DeveloperInfo()));
         },
         
         ),
