@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:uttarons/DeveloperAccess/DeveloperAccess.dart';
 
 
@@ -123,6 +124,11 @@ Future<void> getData(String StudentEmail) async {
       backgroundColor: Colors.white,
       
       appBar: AppBar(
+      
+      systemOverlayStyle: SystemUiOverlayStyle(
+      // Navigation bar
+      statusBarColor: ColorName().appColor, // Status bar
+    ),
         iconTheme: IconThemeData(color: ColorName().appColor),
         leading: IconButton(onPressed: () => Navigator.of(context).pop(), icon: Icon(Icons.chevron_left)),
         title: const Text("Course Fee History", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),),

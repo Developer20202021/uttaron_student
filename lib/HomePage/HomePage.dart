@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -623,6 +624,11 @@ var CourseFee ="";
 
       backgroundColor: Colors.white,
       appBar: AppBar(
+
+        systemOverlayStyle: SystemUiOverlayStyle(
+      // Navigation bar
+          statusBarColor: ColorName().appColor, // Status bar
+        ),
         iconTheme: IconThemeData(color: Color.fromRGBO(92, 107, 192, 1)),
         title: const Text("Home",  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),),
         backgroundColor: Colors.transparent,

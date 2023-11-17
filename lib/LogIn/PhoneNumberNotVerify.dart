@@ -1,5 +1,6 @@
 
 import 'dart:math';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -165,6 +166,10 @@ Future ResendOTPSend() async{
       backgroundColor: Colors.white,
       
       appBar: AppBar(
+      systemOverlayStyle: SystemUiOverlayStyle(
+      // Navigation bar
+      statusBarColor: ColorName().appColor, // Status bar
+    ),
         iconTheme: IconThemeData(color: ColorName().appColor),
         automaticallyImplyLeading: false,
         title: const Text("Phone No Not Verified",  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),),

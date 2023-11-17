@@ -10,6 +10,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
+import 'package:uttarons/DeveloperAccess/DeveloperAccess.dart';
 import 'package:uttarons/LogIn/AdminLogIn.dart';
 
 
@@ -389,6 +390,11 @@ Future ResendOTPSend() async{
       backgroundColor: Colors.white,
       
       appBar: AppBar(
+
+      systemOverlayStyle: SystemUiOverlayStyle(
+      // Navigation bar
+      statusBarColor: ColorName().appColor, // Status bar
+    ),
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         leading: IconButton(onPressed: () => Navigator.of(context).pop(), icon: Icon(Icons.chevron_left)),
         title: const Text("OTP",  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),),

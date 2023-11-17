@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:uttarons/DeveloperAccess/DeveloperAccess.dart';
 
 class DeveloperInfo extends StatefulWidget {
   const DeveloperInfo({super.key});
@@ -14,6 +16,11 @@ class _DeveloperInfoState extends State<DeveloperInfo> {
       backgroundColor: Colors.white,
       
       appBar: AppBar(
+
+        systemOverlayStyle: SystemUiOverlayStyle(
+          // Navigation bar
+          statusBarColor: ColorName().appColor, // Status bar
+        ),
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         
         title: const Text("Developer Information",  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
