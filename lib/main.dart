@@ -2,13 +2,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:upgrader/upgrader.dart';
 import 'package:uttarons/DeveloperAccess/DeveloperAccess.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uttarons/HomePage/HomePage.dart';
 import 'package:uttarons/LogIn/AdminLogIn.dart';
+import 'package:uttarons/Notifications/notifi_service.dart';
 import 'package:uttarons/chat/fetchDataRealtime.dart';
 import 'package:uttarons/chat/realtimecheck.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
 
 void main() async{
 
@@ -22,6 +27,9 @@ void main() async{
     options: FirebaseOptions(apiKey: "AIzaSyCtca9qgQyElzVEMbjUkUrzYsE94fmhhN8", appId: "1:145894825045:android:fcebc7fde39d41eaaa88dc", messagingSenderId: "145894825045", projectId: "uttaronapp",)
     
   );
+
+  NotificationService().initNotification();
+  tz.initializeTimeZones();
 
 
   await Future.delayed(const Duration(seconds: 3));
@@ -57,7 +65,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: ColorName().appColor),
         useMaterial3: true,
       ),
-      home: AdminLogInScreen(),
+      home: UpgradeAlert(
+        
+        child: AdminLogInScreen()),
     );
   }
 }

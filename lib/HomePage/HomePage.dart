@@ -10,6 +10,7 @@ import 'package:uttarons/DeveloperAccess/DeveloperInfo.dart';
 import 'package:uttarons/LogIn/AdminLogIn.dart';
 import 'package:uttarons/Notice/AllNotice.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:uttarons/Notifications/notifi_service.dart';
 import 'package:uttarons/Settings/ChangePassword.dart';
 import 'package:uttarons/myHistory/CourseFeeHistory.dart';
 import 'package:uttarons/myHistory/ExamFeeHistory.dart';
@@ -230,6 +231,18 @@ Future<void> getSpecificAbsenceData(String StudentEmail, String SelectedMonth) a
 
 
 
+Future ShowNotification(String notificationBody, String title) async{
+
+
+
+      NotificationService().showNotification(title: title, body: notificationBody, payLoad: "12312341");
+
+
+
+}
+
+
+
 
 
 
@@ -283,6 +296,9 @@ Future<void> getNewNotice() async {
 
       loading = false;
      });
+
+
+      ShowNotification(NewNotice[0]["Description"], NewNotice[0]["Title"]);
 
     
      }
@@ -624,17 +640,20 @@ var CourseFee ="";
 
       backgroundColor: Colors.white,
       appBar: AppBar(
+    
 
         systemOverlayStyle: SystemUiOverlayStyle(
       // Navigation bar
           statusBarColor: ColorName().appColor, // Status bar
         ),
-        iconTheme: IconThemeData(color: Color.fromRGBO(92, 107, 192, 1)),
-        title: const Text("Home",  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),),
-        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(color: Colors.white),
+        title: const Text("Home",  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),),
+        backgroundColor: ColorName().appColor,
         bottomOpacity: 0.0,
         elevation: 0.0,
         centerTitle: true,
+       
+      
     
         
       ),
@@ -647,52 +666,162 @@ var CourseFee ="";
         onRefresh: refresh,
         child: SingleChildScrollView(
       
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
+                
+        ClipPath(
+            clipper: BackgroundWaveClipper(),
+            child: Container(
+              child:         Center(
+                child: Container(
+                  transform: Matrix4.translationValues(0.0, -30.0, 0.0),
 
-                  
-                  
-                 
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 50,
-                  
-                  child: DefaultTextStyle(
-                    style:  TextStyle(
-                      fontSize: 15.0,
-                      color: ColorName().appColor,
-                      fontFamily: GoogleFonts.spaceGrotesk().fontFamily,
-                      fontWeight: FontWeight.bold
-                    ),
-                    child: AnimatedTextKit(
-                      
-                      repeatForever: true,
-                      animatedTexts: [
-                        TypewriterAnimatedText('Hi...'),
-                        TypewriterAnimatedText('${StudentName.toUpperCase()}'),
-                        TypewriterAnimatedText('Welcome to Uttaron Polytechnic Institute'),
+                  child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 50,
+                    
+                    child: DefaultTextStyle(
+                      style:  TextStyle(
+                        fontSize: 15.0,
+                        color: Colors.white,
+                        fontFamily: GoogleFonts.spaceGrotesk().fontFamily,
+                        fontWeight: FontWeight.bold
+                      ),
+                      child: AnimatedTextKit(
                         
-                      ],
-                      onTap: () {
-                        print("Tap Event");
-                      },
+                        repeatForever: true,
+                        animatedTexts: [
+                          TypewriterAnimatedText('Hi...'),
+                          TypewriterAnimatedText('${StudentName.toUpperCase()}'),
+                          TypewriterAnimatedText('Welcome to Uttaron Polytechnic Institute'),
+                          
+                        ],
+                        onTap: () {
+                          print("Tap Event");
+                        },
+                      ),
                     ),
+                  ),
                   ),
                 ),
               ),
+              width: MediaQuery.of(context).size.width,
+              height: 180,
+              decoration: BoxDecoration(
+                  
+                  color: ColorName().appColor
+                  ),
+            ),
+          ),
 
 
 
 
 
+          // Center(
+          //   child: Container(
+              
+          //     transform: Matrix4.translationValues(0.0, -100.0, 0.0),
+              
+          //     child: CircleAvatar(
+          //       radius: 70,
+
+          //       backgroundImage:
+          //           NetworkImage("${photoUrl}"),
+          //       backgroundColor: Colors.transparent,
+                
+              
+          //     )),
+          // ),
+
+
+
+           Center(
+
+                child: Container(
 
                   
-                  StudentType=="Due"?AnimatedContainer(
+                  transform: Matrix4.translationValues(0.0, -100.0, 0.0),
+
+                  child: CircularPercentIndicator(
+                        
+                         animation: true,
+                         animationDuration: 2500,
+                        
+                         radius: 69.0,
+                         lineWidth: 5.0,
+                         percent: (totalPresence/(totalAbsence+totalPresence)).isNaN?0.0:totalPresence/(totalAbsence+totalPresence),
+                         center:   CircleAvatar(
+                radius: 60,
+
+                backgroundImage:
+                    NetworkImage("${photoUrl}"),
+                backgroundColor: Colors.transparent,
+                
+              
+              ),
+                         
+                         
+                         
+                         progressColor: (100-((double.parse(DueAmount))/(double.parse(CourseFee))*100))>=80.0?Colors.green.shade300:Colors.red.shade300,
+                       ),
+                ),
+                ),
+
+
+            
+
+            
+           
+                 
+              // Center(
+              //   child: Container(
+              //     transform: Matrix4.translationValues(0.0, -70.0, 0.0),
+
+              //     child: Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: SizedBox(
+              //       height: 50,
+                    
+              //       child: DefaultTextStyle(
+              //         style:  TextStyle(
+              //           fontSize: 15.0,
+              //           color: ColorName().appColor,
+              //           fontFamily: GoogleFonts.spaceGrotesk().fontFamily,
+              //           fontWeight: FontWeight.bold
+              //         ),
+              //         child: AnimatedTextKit(
+                        
+              //           repeatForever: true,
+              //           animatedTexts: [
+              //             TypewriterAnimatedText('Hi...'),
+              //             TypewriterAnimatedText('${StudentName.toUpperCase()}'),
+              //             TypewriterAnimatedText('Welcome to Uttaron Polytechnic Institute'),
+                          
+              //           ],
+              //           onTap: () {
+              //             print("Tap Event");
+              //           },
+              //         ),
+              //       ),
+              //     ),
+              //     ),
+              //   ),
+              // ),
+
+
+
+
+
+
+                
+                StudentType=="Due"?Container(
+                  transform: Matrix4.translationValues(0.0, -70.0, 0.0),
+                  child: AnimatedContainer(
+                    
                     
                       transform: (shouldScaleDown
                       ? (Matrix4.identity()
@@ -703,32 +832,34 @@ var CourseFee ="";
                      curve: Curves.fastOutSlowIn,
                      height: 40,
                      
-                     child: Center(
-                 child: Row(
+                  child: Center(
+                    
+                   child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                    children: [
-
+                
                       Icon(Icons.warning, color: Colors.white,),
-
-
+                
+                
                       Text("Please, pay your course fee",style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
-
-
+                
+                
                   
                    ],
-                 ),
-               ),
+                   ),
+                               ),
                           
-                 decoration: BoxDecoration(
+                   decoration: BoxDecoration(
                      color: Colors.orange.shade300,
-                
+                  
                      border: Border.all(
                                width: 2,
                                color: Colors.orange.shade300
                              ),
                      borderRadius: BorderRadius.circular(10)      
-                 ),):Text(""),
+                   ),),
+                ):Text(""),
 
 
 
@@ -742,8 +873,10 @@ var CourseFee ="";
 
 
 
-                    // New Notice 
-                   AnimatedContainer(
+                  // New Notice 
+                 Container(
+                  transform: Matrix4.translationValues(0.0, -40.0, 0.0),
+                   child: AnimatedContainer(
                     
                       transform: (shouldScaleDown
                       ? (Matrix4.identity()
@@ -755,125 +888,51 @@ var CourseFee ="";
                      height: 90,
                      
                      child: Center(
-                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                   child: Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                 crossAxisAlignment: CrossAxisAlignment.center,
                    children: [
-
-                  NewNotice.isEmpty? Text("No New Notice Available Today", style: TextStyle(color: Colors.red.shade300, fontWeight: FontWeight.bold),):Text("1 New Notice Available", style: TextStyle(color: Colors.green.shade300, fontWeight: FontWeight.bold),),
-
-
+                 
+                                 NewNotice.isEmpty? Text("No New Notice Available Today", style: TextStyle(color: Colors.red.shade300, fontWeight: FontWeight.bold),):Text("1 New Notice Available", style: TextStyle(color: Colors.green.shade300, fontWeight: FontWeight.bold),),
+                 
+                 
                    Container(width: 70, child:TextButton(onPressed: (){
-      
-      
+                       
+                       
                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => AllNotice(indexNumber: "2")));
-      
-      
+                       
+                       
                            
-      
-      
-      
-      
-      
+                       
+                       
+                       
+                       
+                       
                           }, child: Text("View", style: TextStyle(color: Colors.white),), style: ButtonStyle(
                            
-                  backgroundColor: MaterialStatePropertyAll<Color>(NewNotice.isEmpty?Colors.red.shade300:Colors.green.shade300),
-                ),),),
-                  
+                                 backgroundColor: MaterialStatePropertyAll<Color>(NewNotice.isEmpty?Colors.red.shade300:Colors.green.shade300),
+                                 ),),),
+                                 
                    ],
-                 ),
-               ),
+                   ),
+                                ),
                           
-                 decoration: BoxDecoration(
+                   decoration: BoxDecoration(
                      color: Colors.white,
-                
+                                 
                      border: Border.all(
                                width: 2,
                                color: NewNotice.isEmpty?Colors.red.shade300:Colors.green.shade300
                              ),
                      borderRadius: BorderRadius.circular(10)      
-                 ),),
-
-
-
-
-
-                 
-                 SizedBox(height: 10,),
-
-
-
-
-
-                 
-                
-                     AnimatedContainer(
-                    
-                      transform: (shouldScaleDown
-                      ? (Matrix4.identity()
-                        ..translate(0.035 * width, 0.025 * height)// translate towards right and down
-                        ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
-                      : Matrix4.identity()),
-                     duration: Duration(seconds: 3),
-                     curve: Curves.fastOutSlowIn,
-                     height: height,
-                     
-                     child: Center(
-                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                   children: [
-                      Text("You have given ${(100-((double.parse(DueAmount))/(double.parse(CourseFee))*100)).toStringAsFixed(2)}% Course Fee",style: TextStyle(color: (100-((double.parse(DueAmount))/(double.parse(CourseFee))*100))>=80.0?Colors.green.shade300:Colors.red.shade300, fontWeight: FontWeight.bold)),
-
-                      SizedBox(height: 10,),
-
-
-
-                     CircularPercentIndicator(
-                       animation: true,
-                       animationDuration: 2500,
-                      
-                       radius: 75.0,
-                       lineWidth: 15.0,
-                       percent: (1-(double.parse(DueAmount))/(double.parse(CourseFee))),
-                       center: Text(
-                         "${(100-((double.parse(DueAmount))/(double.parse(CourseFee))*100)).toStringAsFixed(2)}%",
-                         style: new TextStyle(fontSize: 16.0, color: Colors.black, fontWeight: FontWeight.bold),
-                       ),
-                       
-                       
-                       
-                       progressColor: (100-((double.parse(DueAmount))/(double.parse(CourseFee))*100))>=80.0?Colors.green.shade300:Colors.red.shade300,
-                     ),
-
-                     SizedBox(height: 20,),
-
-
-                    StudentType=="Due"? Text("Due: ${DueAmount}৳",style: TextStyle(color: Colors.red.shade300, fontWeight: FontWeight.bold)):Text(""),
-
-                      
-
-
-
-
-                   ],
+                   ),),
                  ),
-               ),
-                          
-                 decoration: BoxDecoration(
-                     color: Colors.white,
-                
-                     border: Border.all(
-                               width: 1,
-                               color: Colors.grey.shade300
-                             ),
-                     borderRadius: BorderRadius.circular(10)      
-                 ),),
 
 
 
 
 
+                 
                  SizedBox(height: 10,),
 
 
@@ -881,54 +940,129 @@ var CourseFee ="";
 
 
                  
-                      AnimatedContainer(
-                    
-                      transform: (shouldScaleDown
-                      ? (Matrix4.identity()
-                        ..translate(0.035 * width, 0.025 * height)// translate towards right and down
-                        ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
-                      : Matrix4.identity()),
-                     duration: Duration(seconds: 3),
-                     curve: Curves.fastOutSlowIn,
-                     height: 90,
-                     
-                     child: Center(
-                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                   children: [
-                      Text("Your Profile"),
-
-
-                   Container(width: 100, child:TextButton(onPressed: (){
-      
-      
-                                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => StudentProfile(StudentEmail: StudentEmail)));
-      
-      
-                           
-      
-      
-      
-      
-      
-                          }, child: Text("Profile", style: TextStyle(color: Colors.white),), style: ButtonStyle(
-                           
-                  backgroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).primaryColor),
-                ),),),
+                
+                   AnimatedContainer(
                   
-                   ],
+                    transform: (shouldScaleDown
+                    ? (Matrix4.identity()
+                      ..translate(0.035 * width, 0.025 * height)// translate towards right and down
+                      ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
+                    : Matrix4.identity()),
+                   duration: Duration(seconds: 3),
+                   curve: Curves.fastOutSlowIn,
+                   height: height,
+                   
+                   child: Center(
+                 child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                 children: [
+                    Text("You have given ${(100-((double.parse(DueAmount))/(double.parse(CourseFee))*100)).toStringAsFixed(2)}% Course Fee",style: TextStyle(color: (100-((double.parse(DueAmount))/(double.parse(CourseFee))*100))>=80.0?Colors.green.shade300:Colors.red.shade300, fontWeight: FontWeight.bold)),
+
+                    SizedBox(height: 10,),
+
+
+
+                   CircularPercentIndicator(
+                     animation: true,
+                     animationDuration: 2500,
+                    
+                     radius: 75.0,
+                     lineWidth: 15.0,
+                     percent: (1-(double.parse(DueAmount))/(double.parse(CourseFee))),
+                     center: Text(
+                       "${(100-((double.parse(DueAmount))/(double.parse(CourseFee))*100)).toStringAsFixed(2)}%",
+                       style: new TextStyle(fontSize: 16.0, color: Colors.black, fontWeight: FontWeight.bold),
+                     ),
+                     
+                     
+                     
+                     progressColor: (100-((double.parse(DueAmount))/(double.parse(CourseFee))*100))>=80.0?Colors.green.shade300:Colors.red.shade300,
+                   ),
+
+                   SizedBox(height: 20,),
+
+
+                  StudentType=="Due"? Text("Due: ${DueAmount}৳",style: TextStyle(color: Colors.red.shade300, fontWeight: FontWeight.bold)):Text(""),
+
+                    
+
+
+
+
+                 ],
                  ),
                ),
-                          
+                        
                  decoration: BoxDecoration(
-                     color: Colors.white,
+                   color: Colors.white,
                 
-                     border: Border.all(
-                               width: 2,
-                               color: Colors.grey.shade300
-                             ),
-                     borderRadius: BorderRadius.circular(10)      
+                   border: Border.all(
+                             width: 1,
+                             color: Colors.grey.shade300
+                           ),
+                   borderRadius: BorderRadius.circular(10)      
+                 ),),
+
+
+
+
+
+                 SizedBox(height: 10,),
+
+
+
+
+
+                 
+                    AnimatedContainer(
+                  
+                    transform: (shouldScaleDown
+                    ? (Matrix4.identity()
+                      ..translate(0.035 * width, 0.025 * height)// translate towards right and down
+                      ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
+                    : Matrix4.identity()),
+                   duration: Duration(seconds: 3),
+                   curve: Curves.fastOutSlowIn,
+                   height: 90,
+                   
+                   child: Center(
+                 child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                 children: [
+                    Text("Your Profile"),
+
+
+                 Container(width: 100, child:TextButton(onPressed: (){
+      
+      
+                                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => StudentProfile(StudentEmail: StudentEmail)));
+      
+      
+                         
+      
+      
+      
+      
+      
+                        }, child: Text("Profile", style: TextStyle(color: Colors.white),), style: ButtonStyle(
+                         
+                backgroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).primaryColor),
+                ),),),
+                
+                 ],
+                 ),
+               ),
+                        
+                 decoration: BoxDecoration(
+                   color: Colors.white,
+                
+                   border: Border.all(
+                             width: 2,
+                             color: Colors.grey.shade300
+                           ),
+                   borderRadius: BorderRadius.circular(10)      
                  ),),
 
 
@@ -949,51 +1083,51 @@ var CourseFee ="";
 
                 
                 
-                     AnimatedContainer(
-                    
-                      transform: (shouldScaleDown
-                      ? (Matrix4.identity()
-                        ..translate(0.035 * width, 0.025 * height)// translate towards right and down
-                        ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
-                      : Matrix4.identity()),
-                     duration: Duration(seconds: 3),
-                     curve: Curves.fastOutSlowIn,
-                     height: height,
-                     
-                     child: Center(
+                   AnimatedContainer(
+                  
+                    transform: (shouldScaleDown
+                    ? (Matrix4.identity()
+                      ..translate(0.035 * width, 0.025 * height)// translate towards right and down
+                      ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
+                    : Matrix4.identity()),
+                   duration: Duration(seconds: 3),
+                   curve: Curves.fastOutSlowIn,
+                   height: height,
+                   
+                   child: Center(
                  child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                   children: [
-                      Text("Your Presence ${DateTime.now().month}/${DateTime.now().year}"),
-                     CircularPercentIndicator(
-                       animation: true,
-                       animationDuration: 2500,
-                      
-                       radius: 75.0,
-                       lineWidth: 15.0,
-                       percent: (totalPresence/(totalAbsence+totalPresence)).isNaN?0.0:totalPresence/(totalAbsence+totalPresence),
-                       center: Text(
-                         "${(totalPresence/(totalAbsence+totalPresence)).isNaN?"0.0":((totalPresence/(totalAbsence+totalPresence))*100).toStringAsFixed(2)}%",
-                         style: new TextStyle(fontSize: 16.0, color: Colors.black, fontWeight: FontWeight.bold),
-                       ),
-                       
-                       
-                       
-                       progressColor: Colors.green.shade400,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                 children: [
+                    Text("Your Presence ${DateTime.now().month}/${DateTime.now().year}"),
+                   CircularPercentIndicator(
+                     animation: true,
+                     animationDuration: 2500,
+                    
+                     radius: 75.0,
+                     lineWidth: 15.0,
+                     percent: (totalPresence/(totalAbsence+totalPresence)).isNaN?0.0:totalPresence/(totalAbsence+totalPresence),
+                     center: Text(
+                       "${(totalPresence/(totalAbsence+totalPresence)).isNaN?"0.0":((totalPresence/(totalAbsence+totalPresence))*100).toStringAsFixed(2)}%",
+                       style: new TextStyle(fontSize: 16.0, color: Colors.black, fontWeight: FontWeight.bold),
                      ),
-                   ],
+                     
+                     
+                     
+                     progressColor: Colors.green.shade400,
+                   ),
+                 ],
                  ),
                ),
-                          
+                        
                  decoration: BoxDecoration(
-                     color: Colors.white,
+                   color: Colors.white,
                 
-                     border: Border.all(
-                               width: 1,
-                               color: Colors.grey.shade300
-                             ),
-                     borderRadius: BorderRadius.circular(10)      
+                   border: Border.all(
+                             width: 1,
+                             color: Colors.grey.shade300
+                           ),
+                   borderRadius: BorderRadius.circular(10)      
                  ),),
 
 
@@ -1004,51 +1138,51 @@ var CourseFee ="";
 
                  
                 
-                     AnimatedContainer(
-                    
-                      transform: (shouldScaleDown
-                      ? (Matrix4.identity()
-                        ..translate(0.035 * width, 0.025 * height)// translate towards right and down
-                        ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
-                      : Matrix4.identity()),
-                     duration: Duration(seconds: 3),
-                     curve: Curves.fastOutSlowIn,
-                     height: height,
-                     
-                     child: Center(
+                   AnimatedContainer(
+                  
+                    transform: (shouldScaleDown
+                    ? (Matrix4.identity()
+                      ..translate(0.035 * width, 0.025 * height)// translate towards right and down
+                      ..scale(firstValue, secondValue))// scale with to 95% anchorred at topleft of the AnimatedContainer
+                    : Matrix4.identity()),
+                   duration: Duration(seconds: 3),
+                   curve: Curves.fastOutSlowIn,
+                   height: height,
+                   
+                   child: Center(
                  child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                   children: [
-                      Text("Your Absence ${DateTime.now().month}/${DateTime.now().year}"),
-                     CircularPercentIndicator(
-                       animation: true,
-                       animationDuration: 2500,
-                      
-                       radius: 75.0,
-                       lineWidth: 15.0,
-                       percent: (totalPresence/(totalAbsence+totalPresence)).isNaN?0.0:1.0-(totalPresence/(totalAbsence+totalPresence)),
-                       center: Text(
-                         "${(totalPresence/(totalAbsence+totalPresence)).isNaN?"0.0":((1.0-totalPresence/(totalAbsence+totalPresence))*100).toStringAsFixed(2)}%",
-                         style: new TextStyle(fontSize: 16.0, color: Colors.black, fontWeight: FontWeight.bold),
-                       ),
-                       
-                       
-                       
-                       progressColor: Colors.red.shade400,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                 children: [
+                    Text("Your Absence ${DateTime.now().month}/${DateTime.now().year}"),
+                   CircularPercentIndicator(
+                     animation: true,
+                     animationDuration: 2500,
+                    
+                     radius: 75.0,
+                     lineWidth: 15.0,
+                     percent: (totalPresence/(totalAbsence+totalPresence)).isNaN?0.0:1.0-(totalPresence/(totalAbsence+totalPresence)),
+                     center: Text(
+                       "${(totalPresence/(totalAbsence+totalPresence)).isNaN?"0.0":((1.0-totalPresence/(totalAbsence+totalPresence))*100).toStringAsFixed(2)}%",
+                       style: new TextStyle(fontSize: 16.0, color: Colors.black, fontWeight: FontWeight.bold),
                      ),
-                   ],
+                     
+                     
+                     
+                     progressColor: Colors.red.shade400,
+                   ),
+                 ],
                  ),
                ),
-                          
+                        
                  decoration: BoxDecoration(
-                     color: Colors.white,
+                   color: Colors.white,
                 
-                     border: Border.all(
-                               width: 1,
-                               color: Colors.grey.shade300
-                             ),
-                     borderRadius: BorderRadius.circular(10)      
+                   border: Border.all(
+                             width: 1,
+                             color: Colors.grey.shade300
+                           ),
+                   borderRadius: BorderRadius.circular(10)      
                  ),),
 
 
@@ -1070,7 +1204,7 @@ var CourseFee ="";
                  
                  
                  
-                 ]))))
+                 ])))
 
 
 
@@ -1078,4 +1212,34 @@ var CourseFee ="";
 
     );
   }
+}
+
+
+
+
+
+
+
+
+class BackgroundWaveClipper extends CustomClipper<Path> {
+  @override
+Path getClip(Size size) {
+    var path = Path();
+
+    final p0 = size.height * 0.95;
+    path.lineTo(0.0, p0);
+
+    final controlPoint = Offset(size.width * 0.4, size.height);
+    final endPoint = Offset(size.width, size.height / 4);
+    path.quadraticBezierTo(controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy);
+
+    path.lineTo(size.width, 0.0);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(BackgroundWaveClipper oldClipper) =>
+      oldClipper != this;
 }

@@ -10,6 +10,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:path/path.dart';
 import 'package:uttarons/DeveloperAccess/DeveloperAccess.dart';
 import 'package:uttarons/Notice/NoticeImageView.dart';
+import 'package:uttarons/Notifications/notifi_service.dart';
 
 
 
@@ -104,6 +105,101 @@ Future<void> getData() async {
 
 
 
+
+
+
+
+
+Future ShowNotification(String notificationBody, String title) async{
+
+
+
+      NotificationService().showNotification(title: title, body: notificationBody, payLoad: "12312341");
+
+
+
+}
+
+
+
+
+
+
+
+
+List NewNotice =[];
+
+
+
+Future<void> getNewNotice() async {
+    // Get docs from collection reference
+    // QuerySnapshot querySnapshot = await _collectionRef.get();
+          setState(() {
+                loading= true;
+              });
+
+      
+      
+  CollectionReference _collectionRef =
+    FirebaseFirestore.instance.collection('Notice');
+
+    Query query = _collectionRef.where("Date", isEqualTo: "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}");
+    QuerySnapshot querySnapshot = await query.get();
+
+    // Get data from docs and convert map to List
+     NewNotice = querySnapshot.docs.map((doc) => doc.data()).toList();
+     
+     
+
+
+
+     if (NewNotice.isEmpty) {
+
+    setState(() {
+    
+
+      loading = false;
+     });
+
+
+
+       
+     } else {
+
+
+    
+
+
+
+    setState(() {
+       NewNotice = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+      loading = false;
+     });
+
+
+     ShowNotification(NewNotice[0]["Description"], NewNotice[0]["Title"]);
+
+    
+     }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Firebase All Customer Data Load
 
 
@@ -116,6 +212,7 @@ Future<void> getData() async {
 @override
   void initState() {
     // TODO: implement initState
+    getNewNotice();
     setState(() {
       loading = true;
     });

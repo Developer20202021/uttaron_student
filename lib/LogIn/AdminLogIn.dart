@@ -1,4 +1,5 @@
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,8 @@ class _AdminLogInScreenState extends State<AdminLogInScreen> {
   TextEditingController myEmailController = TextEditingController();
   TextEditingController myPassController = TextEditingController();
 
-bool _passVisibility = true;
+
+   bool _passVisibility = true;
 
    var createUserErrorCode = "";
 
@@ -99,7 +101,8 @@ bool _passVisibility = true;
       
       systemOverlayStyle: SystemUiOverlayStyle(
       // Navigation bar
-      statusBarColor: ColorName().appColor, // Status bar
+      statusBarColor: ColorName().appColor, 
+     // Status bar
     ),
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         automaticallyImplyLeading: false,
@@ -137,15 +140,17 @@ bool _passVisibility = true;
                     
                    errorTxt.isNotEmpty?  Padding(
                padding: const EdgeInsets.all(8.0),
-               child: Container(
-             
-                         color: Colors.red.shade400,
-                         
-                         
-                         child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("${errorTxt}", style: TextStyle(color: Colors.white),),
-                         )),
+               child: Center(
+                 child: Container(
+                            
+                           color: Colors.red.shade400,
+                           
+                           
+                           child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("${errorTxt}", style: TextStyle(color: Colors.white),),
+                           )),
+               ),
              ):Text(""),
 
 
@@ -197,6 +202,9 @@ bool _passVisibility = true;
                   autofillHints: [AutofillHints.email],
                   
                   decoration: InputDecoration(
+
+                  prefixIcon: Icon(Icons.email, color: ColorName().appColor,),
+
                       border: OutlineInputBorder(),
                       labelText: 'Enter Email',
                        labelStyle: TextStyle(
@@ -237,6 +245,8 @@ bool _passVisibility = true;
                   obscureText: _passVisibility,
                   obscuringCharacter:"*",
                   decoration: InputDecoration(
+
+                prefixIcon: Icon(Icons.lock, color: ColorName().appColor,),
 
                   suffixIcon: IconButton(
                       icon: _passVisibility
@@ -427,6 +437,28 @@ bool _passVisibility = true;
                   setState(() {
                     loading = false;
                   });
+
+
+
+
+                   final snackBar = SnackBar(
+                    /// need to set following properties for best effect of awesome_snackbar_content
+                    elevation: 0,
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: Colors.transparent,
+                    content: AwesomeSnackbarContent(
+                      title: 'Something Wrong!!',
+                      message:
+                          '${e.code.toString()}',
+        
+                      /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                      contentType: ContentType.failure,
+                    ),
+                  );
+        
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(snackBar);
                      
 
 
